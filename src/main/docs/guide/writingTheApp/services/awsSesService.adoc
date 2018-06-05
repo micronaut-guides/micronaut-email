@@ -11,7 +11,7 @@ include::{sourceDir}/build.gradle[tag=awsses]
 ----
 
 Create a service which encapsulates AWS credentials provider. The bean will not be loaded if the
-system properties (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_KEY`) are not present.
+environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_KEY`) or system properties ( `aws.accesskeyid`, `aws.secretkey`) are not present.
 
 [source,java]
 .src/main/java/example/micronaut/AwsCredentialsProviderCondition.java
@@ -46,7 +46,7 @@ include::{sourceDir}/src/test/groovy/example/micronaut/AwsCredentialsProviderSer
 ----
 
 Create a service which sends the email with AWS Simple Email Service. The bean will not be loaded if the
-system properties (`AWS_REGION`, `AWS_SOURCE_EMAIL`) are not present.
+environment variables (`AWS_REGION`, `AWS_SOURCE_EMAIL`) or system properties (`aws.region`, `aws.sourceemail`) are not present.
 
 [source,java]
 .src/main/java/example/micronaut/AwsSesMailCondition.java
