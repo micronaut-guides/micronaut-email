@@ -2,7 +2,7 @@ package example.micronaut;
 
 import java.util.List;
 
-interface Email {
+public interface Email {
     String getRecipient();
     List<String> getCc();
     List<String> getBcc();

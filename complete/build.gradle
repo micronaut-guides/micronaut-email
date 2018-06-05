@@ -74,10 +74,19 @@ compileJava.options.compilerArgs += '-parameters'
 compileTestJava.options.compilerArgs += '-parameters'
 
 run {
-    systemProperty "SENDGRID_FROM_EMAIL", System.getProperty('SENDGRID_FROM_EMAIL')
-    systemProperty "SENDGRID_APIKEY", System.getProperty('SENDGRID_APIKEY')
-    systemProperty "AWS_REGION", System.getProperty('AWS_REGION')
-    systemProperty "AWS_SOURCE_EMAIL", System.getProperty('AWS_SOURCE_EMAIL')
-    systemProperty "AWS_ACCESS_KEY_ID", System.getProperty('AWS_ACCESS_KEY_ID')
-    systemProperty "AWS_SECRET_KEY", System.getProperty('AWS_SECRET_KEY')
+    systemProperty "sendgrid.apikey", System.getProperty('sendgrid.apikey')
+    systemProperty "sendgrid.fromemail", System.getProperty('sendgrid.fromemail')
+    systemProperty "aws.accesskeyid", System.getProperty("aws.accesskeyid")
+    systemProperty "aws.secretkey", System.getProperty("aws.secretkey")
+    systemProperty "aws.region", System.getProperty("aws.region")
+    systemProperty "aws.sourceemail", System.getProperty("aws.sourceemail")
+}
+
+test {
+    systemProperty "sendgrid.apikey", System.getProperty('sendgrid.apikey')
+    systemProperty "sendgrid.fromemail", System.getProperty('sendgrid.fromemail')
+    systemProperty "aws.accesskeyid", System.getProperty("aws.accesskeyid")
+    systemProperty "aws.secretkey", System.getProperty("aws.secretkey")
+    systemProperty "aws.region", System.getProperty("aws.region")
+    systemProperty "aws.sourceemail", System.getProperty("aws.sourceemail")
 }

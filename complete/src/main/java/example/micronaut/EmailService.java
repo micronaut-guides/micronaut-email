@@ -1,5 +1,5 @@
 package example.micronaut;
 
-interface EmailService {
+public interface EmailService {
     void send(Email email);
 }

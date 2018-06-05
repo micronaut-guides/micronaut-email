@@ -21,15 +21,16 @@ class SendGridEmailService implements EmailService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SendGridEmailService.class);
 
+    protected final String apiKey;
 
-    String apiKey;
+    protected final String fromEmail;
 
-    String fromEmail;
-
-    SendGridEmailService(@Value("${SENDGRID_APIKEY}") String apiKey, // <3>
-                         @Value("${SENDGRID_FROM_EMAIL}") String fromEmail) {
-        this.apiKey = apiKey;
-        this.fromEmail = fromEmail;
+    SendGridEmailService(@Value("${SENDGRID_APIKEY:none}") String apiKeyEnv, // <3>
+                         @Value("${SENDGRID_FROM_EMAIL:none}") String fromEmailEnv,
+                         @Value("${sendgrid.apikey:none}") String apiKeyProp,
+                         @Value("${sendgrid.fromemail:none}") String fromEmailProp) {
+        this.apiKey = apiKeyEnv != null && !apiKeyEnv.equals("none") ? apiKeyEnv : apiKeyProp;
+        this.fromEmail = fromEmailEnv != null && !fromEmailEnv.equals("none")  ? fromEmailEnv: fromEmailProp;
     }
 
     protected Content contentOfEmail(Email email) {

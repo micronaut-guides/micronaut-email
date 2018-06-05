@@ -22,21 +22,23 @@ import javax.inject.Singleton;
 @Requires(beans = AwsCredentialsProviderService.class) // <2>
 @Requires(condition = AwsSesMailCondition.class)  // <3>
 @Primary // <4>
-class AwsSesMailService implements EmailService {
+public class AwsSesMailService implements EmailService {
     private static final Logger LOG = LoggerFactory.getLogger(AwsSesMailService.class);
 
-    String awsRegion;
+    protected final String awsRegion;
 
-    String sourceEmail;
+    protected final String sourceEmail;
 
-    AwsCredentialsProviderService awsCredentialsProviderService;
+    protected final AwsCredentialsProviderService awsCredentialsProviderService;
 
-    AwsSesMailService(@Value("${AWS_REGION}") String awsRegion, // <5>
-                      @Value("${AWS_SOURCE_EMAIL}") String sourceEmail,
+    public AwsSesMailService(@Value("${AWS_REGION:none}") String awsRegionEnv, // <5>
+                      @Value("${AWS_SOURCE_EMAIL:none}") String sourceEmailEnv,
+                      @Value("${aws.region:none}") String awsRegionProp,
+                      @Value("${aws.sourceemail:none}") String sourceEmailProp,
                       AwsCredentialsProviderService awsCredentialsProviderService
                       ) {
-        this.awsRegion = awsRegion;
-        this.sourceEmail = sourceEmail;
+        this.awsRegion = awsRegionEnv != null && !awsRegionEnv.equals("none") ? awsRegionEnv : awsRegionProp;
+        this.sourceEmail = sourceEmailEnv != null && !sourceEmailEnv.equals("none") ? sourceEmailEnv : sourceEmailProp;
         this.awsCredentialsProviderService = awsCredentialsProviderService;
     }
 

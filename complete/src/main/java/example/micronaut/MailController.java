@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class MailController {
     private static final Logger LOG = LoggerFactory.getLogger(MailController.class);
 
-    EmailService emailService;
+    protected final EmailService emailService;
 
     public MailController( EmailService  emailService) { // <2>
         this.emailService = emailService;

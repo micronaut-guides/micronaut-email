@@ -19,6 +19,14 @@ system properties (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_KEY`) are not present.
 include::{sourceDir}/src/main/java/example/micronaut/AwsCredentialsProviderCondition.java[]
 ----
 
+Add a test:
+
+[source,groovy]
+.src/test/groovy/example/micronaut/AwsCredentialsProviderConditionSpec.groovy
+----
+include::{sourceDir}/src/test/groovy/example/micronaut/AwsCredentialsProviderConditionSpec.groovy[]
+----
+
 [source,java]
 .src/main/java/example/micronaut/AwsCredentialsProviderService.java
 ----
@@ -29,6 +37,14 @@ include::{sourceDir}/src/main/java/example/micronaut/AwsCredentialsProviderServi
 <2> Bean will not loaded unless condition is met.
 <3> Values will be resolved from system properties.
 
+Add a test:
+
+[source,groovy]
+.src/test/groovy/example/micronaut/AwsCredentialsProviderServiceSpec.groovy
+----
+include::{sourceDir}/src/test/groovy/example/micronaut/AwsCredentialsProviderServiceSpec.groovy[]
+----
+
 Create a service which sends the email with AWS Simple Email Service. The bean will not be loaded if the
 system properties (`AWS_REGION`, `AWS_SOURCE_EMAIL`) are not present.
 
@@ -36,6 +52,14 @@ system properties (`AWS_REGION`, `AWS_SOURCE_EMAIL`) are not present.
 .src/main/java/example/micronaut/AwsSesMailCondition.java
 ----
 include::{sourceDir}/src/main/java/example/micronaut/AwsSesMailCondition.java[]
+----
+
+Add a test:
+
+[source,groovy]
+.src/test/groovy/example/micronaut/AwsSesMailConditionSpec.groovy
+----
+include::{sourceDir}/src/test/groovy/example/micronaut/AwsSesMailConditionSpec.groovy[]
 ----
 
 [source,java]
@@ -49,3 +73,12 @@ include::{sourceDir}/src/main/java/example/micronaut/AwsSesMailService.java[]
 <3> Bean will not loaded, if bean is not present.
 <4> `@Primary` is a qualifier that indicates that a bean is the primary bean that should be selected in the case of multiple possible interface implementations.
 <5> Values will be resolved from system properties.
+
+
+Add a test:
+
+[source,groovy]
+.src/test/groovy/example/micronaut/AwsSesMailServiceSpec.groovy
+----
+include::{sourceDir}/src/test/groovy/example/micronaut/AwsSesMailServiceSpec.groovy[]
+----

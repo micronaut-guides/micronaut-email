@@ -10,7 +10,7 @@ import java.util.Set;
 
 //tag::clazzwithannotations[]
 @EmailConstraints
-class EmailCmd implements Email {
+public class EmailCmd implements Email {
 //end::clazzwithannotations[]
 
     //tag::properties[]

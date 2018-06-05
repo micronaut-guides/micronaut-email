@@ -9,15 +9,17 @@ import javax.inject.Singleton;
 
 @Singleton // <1>
 @Requires(condition = AwsCredentialsProviderCondition.class) // <2>
-class AwsCredentialsProviderService implements AWSCredentialsProvider {
+public class AwsCredentialsProviderService implements AWSCredentialsProvider {
 
-    String accessKey;
-    String secretKey;
+    protected final String accessKey;
+    protected final String secretKey;
 
-    AwsCredentialsProviderService(@Value("${AWS_ACCESS_KEY_ID}") String accessKey, // <3>
-                                  @Value("${AWS_SECRET_KEY}") String secretKey) {
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
+    public AwsCredentialsProviderService(@Value("${AWS_ACCESS_KEY_ID:none}") String accessKeyEnv, // <3>
+                                  @Value("${AWS_SECRET_KEY:none}") String secretKeyEnv,
+                                  @Value("${aws.accesskeyid:none}") String accessKeyProp,
+                                  @Value("${aws.secretkey:none}") String secretKeyProp) {
+        this.accessKey = accessKeyEnv != null && !accessKeyEnv.equals("none") ? accessKeyEnv : accessKeyProp;
+        this.secretKey = secretKeyEnv != null && !secretKeyEnv.equals("none")  ? accessKeyEnv : secretKeyProp;
     }
 
     @Override
