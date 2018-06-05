@@ -1,3 +1,5 @@
+include::{commondir}/common-spockinjavaapp.adoc[]
+
 In our acceptance test, beans `SendGridEmailService` or `AwsSesMailService` will not be loaded since system properties are not present.
 
 Instead, we setup a Mock which we can verify interactions against.
