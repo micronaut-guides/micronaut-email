@@ -9,7 +9,7 @@ writingTheApp:
     title: Email Service
     awsSesService: AWS SES
     sendGridService: SendGrid
-  resources: Resources
+  resources: Run the app
   test: Test
   validation: Validation
 testingTheApp:
