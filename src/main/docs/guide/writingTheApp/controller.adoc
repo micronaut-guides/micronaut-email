@@ -1,0 +1,32 @@
+Create `MailController` which use a collaborator, `emailService` to send and email.
+
+[source,java]
+.src/main/java/example/micronaut/MailController.java
+----
+include::{sourceDir}/src/main/java/example/micronaut/MailController.java[]
+----
+
+<1> The class is defined as a controller with the http://docs.micronaut.io/snapshot/api/io/micronaut/http/annotation/Controller.html[@Controller] annotation mapped to the path /mail/send
+<2> Constructor injection
+<3> The http://docs.micronaut.io/snapshot/api/io/micronaut/http/annotation/Post.html[@Post] annotation is used to map the index method to all requests that use an HTTP POST
+<4> Use a POJO supplied as a JSON payload in the request to populate the email.
+<5> Return 200 OK as the result
+
+The previous controller uses a POGO supplied in the request body as a JSON Payload
+
+[source,java]
+.src/main/java/example/micronaut/EmailCmd.java
+----
+class EmailCmd implements Email {
+
+include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=properties]
+
+include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=settersandgetters]
+
+    boolean hasErrors() { // <1>
+        false
+    }
+}
+----
+
+<1> We will use a custom validation. See <<validation,CustomValidation>> section to learn more.
