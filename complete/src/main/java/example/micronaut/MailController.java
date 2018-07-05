@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.validation.Validated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.validation.Valid;
 
 @Validated
 @Controller("/mail") // <1>
@@ -20,10 +21,7 @@ public class MailController {
     }
 
     @Post("/send") // <3>
-    public HttpResponse send(@Body EmailCmd cmd) { // <4>
-        if ( cmd.hasErrors() ) {
-            return HttpResponse.badRequest();
-        }
+    public HttpResponse send(@Body @Valid EmailCmd cmd) { // <4>
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("{}", cmd.toString());

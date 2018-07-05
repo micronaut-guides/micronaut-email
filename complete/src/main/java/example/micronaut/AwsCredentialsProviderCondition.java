@@ -7,8 +7,12 @@ public class AwsCredentialsProviderCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context) {
-        return (notBlankAndNotNull(System.getProperty("aws.accesskeyid")) || notBlankAndNotNull(System.getenv("AWS_ACCESS_KEY_ID"))) &&
-                (notBlankAndNotNull(System.getProperty("aws.secretkey")) || notBlankAndNotNull(System.getenv("AWS_SECRET_KEY")));
+        return envOrSystemProperty("AWS_ACCESS_KEY_ID", "aws.accesskeyid") &&
+                envOrSystemProperty("AWS_SECRET_KEY", "aws.secretkey");
+    }
+
+    private boolean envOrSystemProperty(String env, String prop) {
+        return notBlankAndNotNull(System.getProperty(prop)) || notBlankAndNotNull(System.getenv(env));
     }
 
     private boolean notBlankAndNotNull(String str) {

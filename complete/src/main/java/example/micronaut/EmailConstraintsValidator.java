@@ -8,9 +8,7 @@ public class EmailConstraintsValidator implements ConstraintValidator<EmailConst
     @Override
     public boolean isValid(EmailCmd email, ConstraintValidatorContext context) {
         return email !=null &&
-                (notBlankAndNotNull(email.getTextBody()) || notBlankAndNotNull(email.getHtmlBody())) &&
-                notBlankAndNotNull(email.getSubject()) &&
-                notBlankAndNotNull(email.getRecipient());
+                (notBlankAndNotNull(email.getTextBody()) || notBlankAndNotNull(email.getHtmlBody()));
     }
 
     private boolean notBlankAndNotNull(String str) {

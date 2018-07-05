@@ -51,7 +51,5 @@ include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=clazzwith
 include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=properties]
 
 // Getters && Setters
-
-include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=hasErrors]
 }
 ----

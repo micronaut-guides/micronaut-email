@@ -1,9 +1,7 @@
 package example.micronaut;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,10 +12,17 @@ public class EmailCmd implements Email {
 //end::clazzwithannotations[]
 
     //tag::properties[]
+    @NotNull
+    @NotBlank
     private String recipient;
+
+    @NotNull
+    @NotBlank
     private String subject;
+
     private List<String> cc = new ArrayList<>();
     private List<String> bcc = new ArrayList<>();
+
     private String htmlBody;
     private String textBody;
     private String replyTo;
@@ -87,14 +92,4 @@ public class EmailCmd implements Email {
         this.replyTo = replyTo;
     }
     //end::settersandgetters[]
-
-    //tag::hasErrors[]
-    boolean hasErrors() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<EmailCmd>> constraintViolations = validator.validate(this);
-
-        return (constraintViolations!= null && !constraintViolations.isEmpty());
-    }
-    //end::hasErrors[]
 }
