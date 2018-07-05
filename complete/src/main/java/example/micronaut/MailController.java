@@ -9,25 +9,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.validation.Valid;
 
-@Validated
 @Controller("/mail") // <1>
+@Validated // <2>
 public class MailController {
     private static final Logger LOG = LoggerFactory.getLogger(MailController.class);
 
     protected final EmailService emailService;
 
-    public MailController( EmailService  emailService) { // <2>
+    public MailController( EmailService  emailService) { // <3>
         this.emailService = emailService;
     }
 
-    @Post("/send") // <3>
-    public HttpResponse send(@Body @Valid EmailCmd cmd) { // <4>
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("{}", cmd.toString());
-        }
+    @Post("/send") // <4>
+    public HttpResponse send(@Body @Valid EmailCmd cmd) { // <5>
 
         emailService.send(cmd);
-        return HttpResponse.ok();  // <5>
+        return HttpResponse.ok();  // <6>
     }
 }
