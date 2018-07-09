@@ -25,10 +25,5 @@ include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=propertie
 
 include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=settersandgetters]
 
-    boolean hasErrors() { // <1>
-        false
-    }
 }
 ----
-
-<1> We will use a custom validation. See <<validation,CustomValidation>> section to learn more.
