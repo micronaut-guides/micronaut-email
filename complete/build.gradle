@@ -53,7 +53,6 @@ dependencies {
     //end::sendgrid[]
 
     //tag::hibernate-validator[]
-    compile "io.micronaut:validation"
     compile "io.micronaut.configuration:hibernate-validator"
     //end::hibernate-validator[]
 
