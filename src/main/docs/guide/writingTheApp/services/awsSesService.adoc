@@ -7,7 +7,7 @@ Add a dependency to AWS SES SDK:
 [source,java]
 .build.gradle
 ----
-include::{sourceDir}/build.gradle[tag=awsses]
+include::{sourceDir}/build.gradle[tag=awsses,indent=0]
 ----
 
 Create a service which encapsulates AWS credentials provider. The bean will not be loaded if the
@@ -69,8 +69,8 @@ include::{sourceDir}/src/main/java/example/micronaut/AwsSesMailService.java[]
 ----
 
 <1> Use `javax.inject.Singleton` to designate a class a a singleton
-<2> Bean will not loaded unless condition is met.
-<3> Bean will not loaded, if bean is not present.
+<2> Bean will not loaded, if bean is not present.
+<3> Bean will not loaded unless condition is met.
 <4> `@Primary` is a qualifier that indicates that a bean is the primary bean that should be selected in the case of multiple possible interface implementations.
 <5> Values will be resolved from system properties.
 

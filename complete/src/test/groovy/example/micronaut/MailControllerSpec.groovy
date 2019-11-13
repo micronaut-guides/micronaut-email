@@ -1,44 +1,46 @@
 package example.micronaut
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Property
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.RxHttpClient
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
+import io.micronaut.http.client.annotation.Client
+import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Shared
 import spock.lang.Specification
 
-import javax.annotation.Nullable
+import javax.inject.Inject
 
+@MicronautTest // <1>
+@Property(name = 'spec.name', value = 'mailcontroller') // <2>
 class MailControllerSpec extends Specification {
 
     @Shared
-    @AutoCleanup // <1>
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'mailcontroller',
-    ], 'test')  // <2>
+    @Inject
+    ApplicationContext applicationContext // <3>
 
     @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL()) // <3>
+    @Inject
+    @Client("/")
+    RxHttpClient client // <4>
 
     def "/mail/send interacts once email service"() {
         given:
         EmailCmd cmd = new EmailCmd(subject: 'Test',
                 recipient: 'delamos@grails.example',
                 textBody: 'Hola hola')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <4>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <5>
 
         when:
-        Collection emailServices = embeddedServer.applicationContext.getBeansOfType(EmailService)
+        Collection<Class> emailServices = applicationContext.getBeansOfType(EmailService)
 
         then:
         !emailServices.any { it == SendGridEmailService.class}
         !emailServices.any { it == AwsSesMailService.class}
 
         when:
-        EmailService emailService = embeddedServer.applicationContext.getBean(EmailService)
+        EmailService emailService = applicationContext.getBean(EmailService)
 
         then:
         emailService instanceof MockEmailService
@@ -48,6 +50,6 @@ class MailControllerSpec extends Specification {
 
         then:
         rsp.status.code == 200
-        ((MockEmailService)emailService).emails.size() == old(((MockEmailService)emailService).emails.size()) + 1 // <5>
+        ((MockEmailService)emailService).emails.size() == old(((MockEmailService)emailService).emails.size()) + 1 // <6>
     }
 }

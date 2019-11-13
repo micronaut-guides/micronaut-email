@@ -9,7 +9,7 @@ Add a dependency to SendGrid SDK:
 [source,java]
 .build.gradle
 ----
-include::{sourceDir}/build.gradle[tag=sendgrid]
+include::{sourceDir}/build.gradle[tag=sendgrid,indent=0]
 ----
 
 Create a service which encapsulates the integration with SendGrid. The bean will not be loaded if the

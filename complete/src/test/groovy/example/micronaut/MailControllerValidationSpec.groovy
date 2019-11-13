@@ -1,36 +1,37 @@
 package example.micronaut
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Property
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
-import io.micronaut.runtime.server.EmbeddedServer
-import spock.lang.AutoCleanup
+import io.micronaut.test.annotation.MicronautTest
 import spock.lang.Shared
 import spock.lang.Specification
 
+import javax.inject.Inject
 
+@MicronautTest
+@Property(name = 'spec.name', value = 'mailcontroller')
 class MailControllerValidationSpec extends Specification {
 
     @Shared
-    @AutoCleanup
-    // <1>
-    EmbeddedServer embeddedServer = ApplicationContext.run(EmbeddedServer, [
-            'spec.name': 'mailcontroller',
-    ], 'test')  // <2>
+    @Inject
+    ApplicationContext applicationContext
 
     @Shared
-    @AutoCleanup
-    RxHttpClient client = embeddedServer.applicationContext.createBean(RxHttpClient, embeddedServer.getURL()) // <3>
-
+    @Inject
+    @Client("/")
+    RxHttpClient client
 
     def "/mail/send cannot be invoked without subject"() {
         given:
         EmailCmd cmd = new EmailCmd(
                 recipient: 'delamos@micronaut.example',
                 textBody: 'Hola hola')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <4>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
 
         when:
         client.toBlocking().exchange(request)
@@ -45,7 +46,7 @@ class MailControllerValidationSpec extends Specification {
         EmailCmd cmd = new EmailCmd(
                 subject: 'Hola',
                 textBody: 'Hola hola')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <4>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
 
         when:
         client.toBlocking().exchange(request)
@@ -60,7 +61,7 @@ class MailControllerValidationSpec extends Specification {
         EmailCmd cmd = new EmailCmd(
                 subject: 'Hola',
                 recipient: 'delamos@micronaut.example',)
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <4>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
 
         when:
         client.toBlocking().exchange(request)
@@ -76,7 +77,7 @@ class MailControllerValidationSpec extends Specification {
                 subject: 'Hola',
                 recipient: 'delamos@micronaut.example',
                 textBody: 'Hello')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <4>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
 
         when:
         HttpResponse rsp = client.toBlocking().exchange(request)
@@ -91,7 +92,7 @@ class MailControllerValidationSpec extends Specification {
                 subject: 'Hola',
                 recipient: 'delamos@micronaut.example',
                 htmlBody: '<h1>Hello</h1>')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <4>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
 
         when:
         HttpResponse rsp = client.toBlocking().exchange(request)
