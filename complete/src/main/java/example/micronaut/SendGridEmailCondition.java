@@ -2,6 +2,7 @@ package example.micronaut;
 
 import io.micronaut.context.condition.Condition;
 import io.micronaut.context.condition.ConditionContext;
+import io.micronaut.core.util.StringUtils;
 
 public class SendGridEmailCondition implements Condition {
     @Override
@@ -11,10 +12,6 @@ public class SendGridEmailCondition implements Condition {
     }
 
     private boolean envOrSystemProperty(String env, String prop) {
-        return notBlankAndNotNull(System.getProperty(prop)) || notBlankAndNotNull(System.getenv(env));
-    }
-
-    private boolean notBlankAndNotNull(String str) {
-        return str != null && !str.equals("");
+        return StringUtils.isNotEmpty(System.getProperty(prop)) || StringUtils.isNotEmpty(System.getenv(env));
     }
 }
