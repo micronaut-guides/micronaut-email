@@ -1,16 +1,4 @@
-We want to ensure any email request contains a subject, recipient and a text body or html body.
-
-Micronaut's validation is built on with the standard framework – JSR 380, also known as Bean Validation 2.0.
-
-Hibernate Validator is a reference implementation of the validation API.
-
-Add a dependency to it:
-
-[source,java]
-.build.gradle
-----
-include::{sourceDir}/build.gradle[tag=hibernate-validator]
-----
+include::{commondir}/common-validation.adoc[indent=0]
 
 Create the next test:
 
@@ -33,12 +21,12 @@ In order to satisfy the test, create an email constraints annotation
 include::{sourceDir}/src/main/java/example/micronaut/EmailConstraints.java[]
 ----
 
-and a validator:
+and a contraint validator in a `@Factory` class:
 
 [source,java]
-.src/main/java/example/micronaut/EmailConstraintsValidator.java
+.src/main/java/example/micronaut/EmailConstraintsFactory.java
 ----
-include::{sourceDir}/src/main/java/example/micronaut/EmailConstraintsValidator.java[]
+include::{sourceDir}/src/main/java/example/micronaut/EmailConstraintsFactory.java[]
 ----
 
 Annotate Email with `EmailConstraints` and `@Introspected` (to generate the
