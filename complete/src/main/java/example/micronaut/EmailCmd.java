@@ -1,12 +1,14 @@
 package example.micronaut;
 
+import io.micronaut.core.annotation.Introspected;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 //tag::clazzwithannotations[]
+@Introspected
 @EmailConstraints
 public class EmailCmd implements Email {
 //end::clazzwithannotations[]

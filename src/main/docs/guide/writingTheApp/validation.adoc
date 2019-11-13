@@ -41,7 +41,8 @@ and a validator:
 include::{sourceDir}/src/main/java/example/micronaut/EmailConstraintsValidator.java[]
 ----
 
-Annotate Email with `EmailConstraints` and populate the `hasErrors` method.
+Annotate Email with `EmailConstraints` and `@Introspected` (to generate the
+https://docs.micronaut.io/latest/guide/index.html#introspection[Bean Introspection information]).
 
 [source,java]
 .src/main/java/example/micronaut/EmailCmd.java
