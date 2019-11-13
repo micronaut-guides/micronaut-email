@@ -96,3 +96,5 @@ test {
     systemProperty "aws.region", System.getProperty("aws.region")
     systemProperty "aws.sourceemail", System.getProperty("aws.sourceemail")
 }
+
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
