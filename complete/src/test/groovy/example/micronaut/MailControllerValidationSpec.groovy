@@ -13,8 +13,8 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
-@MicronautTest
-@Property(name = 'spec.name', value = 'mailcontroller')
+@MicronautTest // <1>
+@Property(name = 'spec.name', value = 'mailcontroller') // <2>
 class MailControllerValidationSpec extends Specification {
 
     @Shared
@@ -31,7 +31,7 @@ class MailControllerValidationSpec extends Specification {
         EmailCmd cmd = new EmailCmd(
                 recipient: 'delamos@micronaut.example',
                 textBody: 'Hola hola')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <3>
 
         when:
         client.toBlocking().exchange(request)
@@ -46,7 +46,7 @@ class MailControllerValidationSpec extends Specification {
         EmailCmd cmd = new EmailCmd(
                 subject: 'Hola',
                 textBody: 'Hola hola')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <3>
 
         when:
         client.toBlocking().exchange(request)
@@ -61,7 +61,7 @@ class MailControllerValidationSpec extends Specification {
         EmailCmd cmd = new EmailCmd(
                 subject: 'Hola',
                 recipient: 'delamos@micronaut.example',)
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <3>
 
         when:
         client.toBlocking().exchange(request)
@@ -77,7 +77,7 @@ class MailControllerValidationSpec extends Specification {
                 subject: 'Hola',
                 recipient: 'delamos@micronaut.example',
                 textBody: 'Hello')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <3>
 
         when:
         HttpResponse rsp = client.toBlocking().exchange(request)
@@ -92,7 +92,7 @@ class MailControllerValidationSpec extends Specification {
                 subject: 'Hola',
                 recipient: 'delamos@micronaut.example',
                 htmlBody: '<h1>Hello</h1>')
-        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <1>
+        HttpRequest request = HttpRequest.POST('/mail/send', cmd) // <3>
 
         when:
         HttpResponse rsp = client.toBlocking().exchange(request)

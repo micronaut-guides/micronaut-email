@@ -1,14 +1,17 @@
+We want to ensure any email request contains a subject, recipient and a text body or html body.
+
 include::{commondir}/common-validation.adoc[indent=0]
 
 Create the next test:
 
-[source,java]
+[source,groovy]
 .src/test/java/example/micronaut/MailControllerValidationSpec.groovy
 ----
 include::{sourceDir}/src/test/groovy/example/micronaut/MailControllerValidationSpec.groovy[]
 ----
-
-<1> Creating HTTP Requests is easy thanks to Micronaut's fluid API.
+<1> Annotate the class with `@MicronatTest` to let Micronaut starts the embedder server and inject the beans. More info: https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html[https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html].
+<2> Define a property available for the application.
+<3> Creating HTTP Requests is easy thanks to Micronaut's fluid API.
 
 In order to satisfy the test, create an email constraints annotation
 
