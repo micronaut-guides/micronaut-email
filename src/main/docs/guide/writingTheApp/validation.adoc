@@ -29,7 +29,7 @@ and a contraint validator in a `@Factory` class:
 include::{sourceDir}/src/main/java/example/micronaut/EmailConstraintsFactory.java[]
 ----
 
-Annotate Email with `EmailConstraints` and `@Introspected` (to generate the
+Annotate `EmailCmd` with `EmailConstraints` and `@Introspected` (to generate the
 https://docs.micronaut.io/latest/guide/index.html#introspection[Bean Introspection information]).
 
 [source,java]
