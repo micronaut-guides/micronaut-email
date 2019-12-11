@@ -14,3 +14,5 @@ writingTheApp:
   validation: Validation
 testingTheApp:
   title: Testing the Application
+help:
+  title: Help with Micronaut  
