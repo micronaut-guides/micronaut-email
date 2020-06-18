@@ -1,109 +1,55 @@
 package example.micronaut;
 
-import com.amazonaws.services.simpleemail.model.SendEmailResult;
-
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import io.micronaut.context.annotation.Primary;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.context.annotation.Secondary;
 import io.micronaut.context.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.ses.model.Body;
+import software.amazon.awssdk.services.ses.model.Content;
+import software.amazon.awssdk.services.ses.model.Destination;
+import software.amazon.awssdk.services.ses.model.Message;
+import software.amazon.awssdk.services.ses.model.SendEmailRequest;
+import software.amazon.awssdk.services.ses.model.SendEmailResponse;
 
 import javax.inject.Singleton;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 @Singleton // <1>
-@Requires(beans = AwsCredentialsProviderService.class) // <2>
-@Requires(condition = AwsSesMailCondition.class)  // <3>
-@Primary // <4>
+@Requires(condition = AwsResourceAccessCondition.class)  // <2>
+@Secondary // <3>
 public class AwsSesMailService implements EmailService {
     private static final Logger LOG = LoggerFactory.getLogger(AwsSesMailService.class);
-
-    protected final String awsRegion;
-
     protected final String sourceEmail;
+    protected final SesClient ses;
 
-    protected final AwsCredentialsProviderService awsCredentialsProviderService;
+    public AwsSesMailService(@Nullable @Value("${AWS_REGION}") String awsRegionEnv, // <4>
+                             @Nullable @Value("${AWS_SOURCE_EMAIL}") String sourceEmailEnv,
+                             @Nullable @Value("${aws.region}") String awsRegionProp,
+                             @Nullable @Value("${aws.sourceemail}") String sourceEmailProp) {
 
-    public AwsSesMailService(@Value("${AWS_REGION:none}") String awsRegionEnv, // <5>
-                      @Value("${AWS_SOURCE_EMAIL:none}") String sourceEmailEnv,
-                      @Value("${aws.region:none}") String awsRegionProp,
-                      @Value("${aws.sourceemail:none}") String sourceEmailProp,
-                      AwsCredentialsProviderService awsCredentialsProviderService
-                      ) {
-        this.awsRegion = awsRegionEnv != null && !awsRegionEnv.equals("none") ? awsRegionEnv : awsRegionProp;
-        this.sourceEmail = sourceEmailEnv != null && !sourceEmailEnv.equals("none") ? sourceEmailEnv : sourceEmailProp;
-        this.awsCredentialsProviderService = awsCredentialsProviderService;
-    }
-
-    private Body bodyOfEmail(Email email) {
-        if (email.getHtmlBody() != null && !email.getHtmlBody().isEmpty()) {
-            Content htmlBody = new Content().withData(email.getHtmlBody());
-            return new Body().withHtml(htmlBody);
-        }
-        if (email.getTextBody() != null && !email.getTextBody().isEmpty()) {
-            Content textBody = new Content().withData(email.getTextBody());
-            return new Body().withHtml(textBody);
-        }
-        return new Body();
+        this.sourceEmail = sourceEmailEnv != null ? sourceEmailEnv : sourceEmailProp;
+        String awsRegion = awsRegionEnv != null ? awsRegionEnv : awsRegionProp;
+        this.ses = SesClient.builder().region(Region.of(awsRegion)).build();
     }
 
     @Override
-    public void send(Email email) {
-
-        if ( awsCredentialsProviderService == null ) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("AWS Credentials provider not configured");
-            }
-            return;
-        }
-
-        Destination destination = new Destination().withToAddresses(email.getRecipient());
-        if ( email.getCc() !=null) {
-            destination = destination.withCcAddresses(email.getCc());
-        }
-        if ( email.getBcc() != null ) {
-            destination = destination.withBccAddresses(email.getBcc());
-        }
-        Content subject = new Content().withData(email.getSubject());
-        Body body = bodyOfEmail(email);
-        Message message = new Message().withSubject(subject).withBody(body);
-
-        SendEmailRequest request = new SendEmailRequest()
-                .withSource(sourceEmail)
-                .withDestination(destination)
-                .withMessage(message);
-
-        if ( email.getReplyTo() != null ) {
-            request = request.withReplyToAddresses();
-        }
-
-        try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Attempting to send an email through Amazon SES by using the AWS SDK for Java...");
-            }
-
-            AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard()
-                    .withCredentials(awsCredentialsProviderService)
-                    .withRegion(awsRegion)
-                    .build();
-
-            SendEmailResult sendEmailResult = client.sendEmail(request);
-
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Email sent! {}", sendEmailResult.toString());
-            }
-        } catch (Exception ex) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("The email was not sent.");
-                LOG.warn("Error message: {}", ex.getMessage());
-            }
+    public void send(@NonNull @NotNull @Valid Email email) {
+        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                .destination(Destination.builder().toAddresses(email.getRecipient()).build())
+                .source(sourceEmail)
+                .message(Message.builder().subject(Content.builder().data(email.getSubject()).build())
+                        .body(Body.builder().text(Content.builder().data(email.getTextBody()).build()).build()).build())
+                .build();
+        SendEmailResponse response =ses.sendEmail(sendEmailRequest);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Sent email with id: {}", response.messageId());
         }
     }
 }

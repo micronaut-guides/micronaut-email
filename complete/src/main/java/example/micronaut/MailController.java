@@ -11,7 +11,6 @@ import javax.validation.Valid;
 
 @Controller("/mail") // <1>
 public class MailController {
-    private static final Logger LOG = LoggerFactory.getLogger(MailController.class);
 
     private final EmailService emailService;
 
@@ -20,7 +19,7 @@ public class MailController {
     }
 
     @Post("/send") // <3>
-    public HttpResponse send(@Body @Valid EmailCmd cmd) { // <4>
+    public HttpResponse<?> send(@Body @Valid EmailCmd cmd) { // <4>
         emailService.send(cmd);
         return HttpResponse.ok();  // <5>
     }

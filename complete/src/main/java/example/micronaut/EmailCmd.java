@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 //tag::clazzwithannotations[]
-@Introspected
 @EmailConstraints
-public class EmailCmd implements Email {
 //end::clazzwithannotations[]
+//tag::clazz[]
+@Introspected
+public class EmailCmd implements Email {
+//end::clazz[]
 
     //tag::properties[]
     @NotNull

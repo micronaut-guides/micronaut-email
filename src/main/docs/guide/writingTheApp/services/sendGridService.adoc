@@ -23,10 +23,10 @@ include::{sourceDir}/src/main/java/example/micronaut/SendGridEmailCondition.java
 
 Add a test:
 
-[source,groovy]
-.src/test/groovy/example/micronaut/SendGridEmailConditionSpec.groovy
+[source,java]
+.src/test/java/example/micronaut/SendGridEmailConditionTest.java
 ----
-include::{sourceDir}/src/test/groovy/example/micronaut/SendGridEmailConditionSpec.groovy[]
+include::{sourceDir}/src/test/java/example/micronaut/SendGridEmailConditionTest.java[]
 ----
 
 [source,java]
@@ -42,8 +42,8 @@ include::{sourceDir}/src/main/java/example/micronaut/SendGridEmailService.java[]
 
 Add a test:
 
-[source,groovy]
-.src/test/groovy/example/micronaut/SendGridEmailServiceSpec.groovy
+[source,java]
+.src/test/java/example/micronaut/SendGridEmailServiceTest.java
 ----
-include::{sourceDir}/src/test/groovy/example/micronaut/SendGridEmailServiceSpec.groovy[]
+include::{sourceDir}/src/test/java/example/micronaut/SendGridEmailServiceTest.java[]
 ----

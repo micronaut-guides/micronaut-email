@@ -1,5 +1,6 @@
-profile: service
-defaultPackage: example
----
-testFramework: spock
-sourceLanguage: groovy
+applicationType: default
+defaultPackage: example.micronaut
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, docker, file-watch, graalvm, gradle, http-client, java, java-application, junit, logback, netty-server, readme, shade, yaml]

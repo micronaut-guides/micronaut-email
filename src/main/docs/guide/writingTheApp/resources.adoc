@@ -6,7 +6,8 @@ Add a logger to get more visibility:
 ...
 ..
 .
-include::{sourceDir}/src/main/resources/logback.xml[]
+include::{sourceDir}/src/main/resources/logback.xml[tag=logger]
+</configuration>
 ----
 
 To use SendGrid, setup the required environment variables and run the app
@@ -29,4 +30,15 @@ $ export AWS_SECRET_KEY=XXXXXXXX
 $ ./gradlew run
 ----
 
-If you supply both AWS SES and SendGrid  system properties, the AWS SES `EmailService` implementation will be used due to the `@Primary` annotation.
+If you supply both AWS SES and SendGrid  system properties, the SendGrid `EmailService` implementation will be used due to the `@Secondary` annotation in `AwsSesMailService`.
+
+[source,bash]
+----
+curl -X "POST" "http://localhost:8080/mail/send" \
+-H 'Content-Type: application/json; charset=utf-8' \
+-d $'{
+"subject": "Test Email",
+"recipient": "recipient@email.com",
+"textBody": "Foo"
+}'
+----

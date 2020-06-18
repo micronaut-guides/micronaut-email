@@ -12,7 +12,7 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
-
+<!--tag::logger[]-->
     <logger name="example.micronaut" level="TRACE"/>
-
+<!--end::logger[]-->
 </configuration>
