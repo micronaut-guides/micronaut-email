@@ -4,10 +4,10 @@ include::{commondir}/common-validation.adoc[indent=0]
 
 Create the next test:
 
-[source,groovy]
-.src/test/java/example/micronaut/MailControllerValidationSpec.groovy
+[source,java]
+.src/test/java/example/micronaut/MailControllerValidationTest.java
 ----
-include::{sourceDir}/src/test/groovy/example/micronaut/MailControllerValidationSpec.groovy[]
+include::{sourceDir}/src/test/java/example/micronaut/MailControllerValidationTest.java[]
 ----
 <1> Annotate the class with `@MicronatTest` to let Micronaut starts the embedded server and inject the beans. More info: https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html[https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html].
 <2> Define a property available for the application.
@@ -36,7 +36,7 @@ https://docs.micronaut.io/latest/guide/index.html#introspection[Bean Introspecti
 .src/main/java/example/micronaut/EmailCmd.java
 ----
 include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=clazzwithannotations]
-
+include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=clazz]
 include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=properties]
 
 // Getters && Setters

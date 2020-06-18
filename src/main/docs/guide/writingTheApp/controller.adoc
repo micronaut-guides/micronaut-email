@@ -18,7 +18,7 @@ The previous controller uses a POJO supplied in the request body as a JSON Paylo
 [source,java]
 .src/main/java/example/micronaut/EmailCmd.java
 ----
-class EmailCmd implements Email {
+include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=clazz]
 
 include::{sourceDir}/src/main/java/example/micronaut/EmailCmd.java[tag=properties]
 

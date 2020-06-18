@@ -1,18 +1,21 @@
 package example.micronaut;
 
-import com.sendgrid.Personalization;
-import com.sendgrid.Content;
-import com.sendgrid.Mail;
 import com.sendgrid.SendGrid;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.Method;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Personalization;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 @Singleton // <1>
@@ -44,17 +47,17 @@ class SendGridEmailService implements EmailService {
     }
 
     @Override
-    public void send(Email email) {
+    public void send(@NonNull @NotNull @Valid Email email) {
 
         Personalization personalization = new Personalization();
         personalization.setSubject(email.getSubject());
 
-        com.sendgrid.Email to = new com.sendgrid.Email(email.getRecipient());
+        com.sendgrid.helpers.mail.objects.Email to = new com.sendgrid.helpers.mail.objects.Email(email.getRecipient());
         personalization.addTo(to);
 
         if ( email.getCc() != null ) {
             for ( String cc : email.getCc() ) {
-                com.sendgrid.Email ccEmail = new com.sendgrid.Email();
+                com.sendgrid.helpers.mail.objects.Email ccEmail = new com.sendgrid.helpers.mail.objects.Email();
                 ccEmail.setEmail(cc);
                 personalization.addCc(ccEmail);
             }
@@ -62,14 +65,14 @@ class SendGridEmailService implements EmailService {
 
         if ( email.getBcc()  != null ) {
             for ( String bcc : email.getBcc() ) {
-                com.sendgrid.Email bccEmail = new com.sendgrid.Email();
+                com.sendgrid.helpers.mail.objects.Email bccEmail = new com.sendgrid.helpers.mail.objects.Email();
                 bccEmail.setEmail(bcc);
                 personalization.addBcc(bccEmail);
             }
         }
 
         Mail mail = new Mail();
-        com.sendgrid.Email from = new com.sendgrid.Email();
+        com.sendgrid.helpers.mail.objects.Email from = new com.sendgrid.helpers.mail.objects.Email();
         from.setEmail(fromEmail);
         mail.from = from;
         mail.addPersonalization(personalization);

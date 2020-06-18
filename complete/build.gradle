@@ -1,7 +1,6 @@
 plugins {
-    id "net.ltgt.apt-eclipse" version "0.21"
-    id "groovy"
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.diffplug.eclipse.apt" version "3.22.0"
+    id "com.github.johnrengelman.shadow" version "6.0.0"
     id "application"
 }
 
@@ -9,8 +8,8 @@ version "0.1"
 group "example.micronaut"
 
 repositories {
+    mavenCentral()
     jcenter()
-    maven { url "https://oss.jfrog.org/oss-snapshot-local" }
 }
 
 configurations {
@@ -19,42 +18,44 @@ configurations {
 }
 
 dependencies {
-    annotationProcessor(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     annotationProcessor("io.micronaut:micronaut-inject-java")
-    annotationProcessor("io.micronaut:micronaut-validation")
-    implementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+
+    annotationProcessor("io.micronaut:micronaut-graal")
+    compileOnly(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    compileOnly("org.graalvm.nativeimage:svm")
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation("io.micronaut:micronaut-inject")
+
+    //tag::validator[]
+    annotationProcessor("io.micronaut:micronaut-validation")
     implementation("io.micronaut:micronaut-validation")
+    //end::validator[]
+
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut:micronaut-http-server-netty")
     implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
+    testAnnotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testAnnotationProcessor("io.micronaut:micronaut-inject-java")
+    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("io.micronaut.test:micronaut-test-junit5")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
     //tag::awsses[]
-    implementation('com.amazonaws:aws-java-sdk-ses:1.11.285')
+    implementation('software.amazon.awssdk:ses:2.13.39')
     //end::awsses[]
     //tag::sendgrid[]
-    implementation('com.sendgrid:sendgrid-java:4.1.2')
+    implementation('com.sendgrid:sendgrid-java:4.6.0')
     //end::sendgrid[]
-    testImplementation(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
-    //tag::validator[]
-    implementation('io.micronaut:micronaut-validation')
-    //end::validator[]
-
-    //tag::spock[]
-    testImplementation("org.spockframework:spock-core") {
-        exclude group: "org.codehaus.groovy", module: "groovy-all"
-    }
-    testImplementation("io.micronaut:micronaut-inject-groovy")
-    testImplementation("io.micronaut.test:micronaut-test-spock")
-    //end::spock[]
-
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
 
 }
 
 test.classpath += configurations.developmentOnly
 
 mainClassName = "example.micronaut.Application"
+
 // use JUnit 5 platform
 test {
     useJUnitPlatform()
@@ -72,8 +73,8 @@ tasks.withType(JavaCompile) {
         // enables incremental compilation
         '-Amicronaut.processing.incremental=true',
         '-Amicronaut.processing.annotations=example.micronaut.*',
-        '-Amicronaut.processing.group=example.micronaut',
-        '-Amicronaut.processing.module=complete',
+        "-Amicronaut.processing.group=$project.group",
+        "-Amicronaut.processing.module=$project.name",
     ])
 }
 
@@ -84,15 +85,39 @@ shadowJar {
 tasks.withType(JavaExec) {
     classpath += configurations.developmentOnly
     jvmArgs('-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
+    if (gradle.startParameter.continuous) {
+        systemProperties(
+            'micronaut.io.watch.restart':'true',
+            'micronaut.io.watch.enabled':'true',
+            "micronaut.io.watch.paths":"src/main"
+        )
+    }
+    if (System.getProperty('sendgrid.apikey') != null) {
+        systemProperty "sendgrid.apikey", System.getProperty('sendgrid.apikey')
+    }
+    if (System.getProperty('sendgrid.fromemail') != null) {
+        systemProperty "sendgrid.fromemail", System.getProperty('sendgrid.fromemail')
+    }
+    if (System.getProperty('aws.accessKeyId') != null) {
+        systemProperty "aws.accessKeyId", System.getProperty('aws.accessKeyId')
+    }
+    if (System.getProperty('aws.secretAccessKey') != null) {
+        systemProperty "aws.secretAccessKey", System.getProperty('aws.secretAccessKey')
+    }
+    if (System.getProperty('aws.region') != null) {
+        systemProperty "aws.region", System.getProperty('aws.region')
+    }
+    if (System.getProperty('aws.sourceemail') != null) {
+        systemProperty "aws.sourceemail", System.getProperty('aws.sourceemail')
+    }
 }
 
 test {
     systemProperty "sendgrid.apikey", System.getProperty('sendgrid.apikey')
     systemProperty "sendgrid.fromemail", System.getProperty('sendgrid.fromemail')
-    systemProperty "aws.accesskeyid", System.getProperty("aws.accesskeyid")
-    systemProperty "aws.secretkey", System.getProperty("aws.secretkey")
+    systemProperty "aws.accessKeyId", System.getProperty("aws.accessKeyId")
+    systemProperty "aws.secretAccessKey", System.getProperty("aws.secretAccessKey")
     systemProperty "aws.region", System.getProperty("aws.region")
     systemProperty "aws.sourceemail", System.getProperty("aws.sourceemail")
 }
 
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

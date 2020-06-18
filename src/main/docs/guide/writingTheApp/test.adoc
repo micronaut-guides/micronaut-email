@@ -1,21 +1,19 @@
-include::{commondir}/common-spockinjavaapp.adoc[]
-
 In our acceptance test, beans `SendGridEmailService` or `AwsSesMailService` will not be loaded since system properties are not present.
 
 Instead, we setup a Mock which we can verify interactions against.
 
-[source,groovy]
-.src/test/groovy/example/micronaut/MockEmailService.groovy
+[source,java]
+.src/test/java/example/micronaut/MockEmailService.java
 ----
-include::{sourceDir}/src/test/groovy/example/micronaut/MockEmailService.groovy[]
+include::{sourceDir}/src/test/java/example/micronaut/MockEmailService.java[]
 ----
 
 Create the next test:
 
-[source,groovy]
-.src/test/groovy/example/micronaut/MailControllerSpec.groovy
+[source,java]
+.src/test/java/example/micronaut/MailControllerTest.java
 ----
-include::{sourceDir}/src/test/groovy/example/micronaut/MailControllerSpec.groovy[]
+include::{sourceDir}/src/test/java/example/micronaut/MailControllerTest.java[]
 ----
 
 <1> Annotate the class with `@MicronatTest` to let Micronaut starts the embedded server and inject the beans. More info: https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html[https://micronaut-projects.github.io/micronaut-test/latest/guide/index.html]
